@@ -1,0 +1,29 @@
+service: iotdisplay
+custom: ${file(./serverless.dev.yml)}
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: ${self:custom.environment.STAGE}
+  region: ${self:custom.environment.AWS_REGION}
+  apiKeys:
+  - demo
+  environment:
+    IOT_ENDPOINT: ${self:custom.environment.AWS_IOT_ENDPOINT}
+  iamRoleStatements:
+    -  Effect: "Allow"
+       Action:
+         - "iot:UpdateThingShadow"
+       Resource: "arn:aws:iot:*:*:thing/*"
+functions:
+  writeToThing:
+    handler: lambda/write-to-thing.write
+    name: ${self:service}-writeToThing-${self:custom.environment.STAGE}
+    events:
+      - http:
+          path: device/{id}
+          method: put
+          private: true
+          request:
+            parameters:
+              paths:
+                id: true

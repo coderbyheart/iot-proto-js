@@ -1,0 +1,6 @@
+environment:
+  STAGE: dev
+  AWS_ACCOUNT: changeme
+  AWS_REGION: us-east-1
+  AWS_IOT_ENDPOINT: changeme.iot.us-east-1.amazonaws.com
+
