@@ -1,0 +1,24 @@
+{
+  "name": "@coderbyheart/iot-proto-js",
+  "version": "1.0.0",
+  "description": "Source code examples used in my presention on Prototyping products for the Internet of Things using JavaScript",
+  "devDependencies": {
+    "espruino": "^0.1.7",
+    "standard": "^11.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderbyheart/iot-proto-js.git"
+  },
+  "keywords": [
+    "IoT",
+    "JavaScript",
+    "Espruino"
+  ],
+  "author": "Markus Tacker | https://coderbyheart.com/",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coderbyheart/iot-proto-js/issues"
+  },
+  "homepage": "https://github.com/coderbyheart/iot-proto-js#readme"
+}
