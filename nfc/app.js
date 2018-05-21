@@ -1,3 +1,7 @@
+'use strict'
+
+/* global digitalWrite LED1 LED2 I2C1 B6 B7 */
+
 // Wifi
 const wifi = require('EspruinoWiFi')
 const WIFI_NAME = 'changeme'

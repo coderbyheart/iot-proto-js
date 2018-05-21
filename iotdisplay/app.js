@@ -1,3 +1,7 @@
+'use strict'
+
+/* global digitalWrite LED1 LED2 I2C1 B8 B9 atob url */
+
 // Settings
 
 const MATRIX_1 = 0x70
