@@ -1,4 +1,4 @@
-service: iotdisplay
+service: display
 custom: ${file(./serverless.dev.yml)}
 provider:
   name: aws
