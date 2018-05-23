@@ -11,4 +11,4 @@ Connect `SDA` on the reader to the `B7` pin of the Espruino.
 Connect `5V` on the reader to the `5V` pin of the Espruino (left of the `3.3V`).  
 Connect `GND` next to the `SCL` pin on the reader to the `GND` pin of the Espruino.
 
-
+![NFC wiring](https://farm1.staticflickr.com/977/28425769188_4765503bc3_k_d.jpg)
