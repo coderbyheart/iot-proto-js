@@ -23,3 +23,7 @@ They are hooked in parallel:
 
 The second display has the `A0` jumper soldered (so it has the address `0x71`),
 The third display has the `A1` jumper soldered (so it has the address `0x72`).
+
+I use a free MQTT broker from [cloudmqtt.com](https://www.cloudmqtt.com/), copy the file [`./display/cloudmqtt.com/.env.dist`](./display/cloudmqtt.com/.env.dist) to `./display/cloudmqtt.com/.env` and enter your details.
+
+Now you can run `node client.js` in the `./display/cloudmqtt.com` folder.

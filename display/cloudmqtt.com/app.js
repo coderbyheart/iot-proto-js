@@ -5,7 +5,13 @@ const MATRIX_2 = 0x71;
 const MATRIX_3 = 0x72;
 const WIFI_NAME = 'changeme';
 const WIFI_PASSWORD = 'changeme';
-const thingId = 'espruino-jotb-2018'; // change me, maybe
+const THING_ID = 'espruino-jotb-2018'; // change me, maybe
+
+// MQTT client settings for connecting to cloudmqtt.com
+const MQTT_HOST = 'xx.cloudmqtt.com';
+const MQTT_USERNAME = 'changeme';
+const MQTT_PASSWORD = 'changeme';
+const MQTT_PORT = 16385;
 
 // Modules
 const wifi = require('EspruinoWiFi');
@@ -45,12 +51,13 @@ let led1State = false;
 
 let mqtt;
 
-const mqttHost = 'test.mosquitto.org';
 const mqttOptions = {
-  client_id: thingId,
+  client_id: THING_ID,
   keep_alive: 60,
-  port: 1883,
-  clean_session: true
+  port: MQTT_PORT,
+  clean_session: true,
+  username: MQTT_USERNAME,
+  password: MQTT_PASSWORD,
 };
 
 const init = function() {
@@ -87,9 +94,9 @@ const init = function() {
       digitalWrite(LED2, led1State);
     }, 250);
 
-    const baseShadowTopic = thingId;
+    const baseShadowTopic = THING_ID;
 
-    mqtt = require('MQTT').create(mqttHost, mqttOptions);
+    mqtt = require('MQTT').create(MQTT_HOST, mqttOptions);
     mqtt.on('connected', function () {
       if (led1Blink) {
         led1Blink = clearInterval(led1Blink);
@@ -121,7 +128,7 @@ const init = function() {
 
     setTimeout(function () {
       console.log('Connecting to MQTT');
-      console.log(mqttHost, mqttOptions);
+      console.log(MQTT_HOST, mqttOptions);
       mqtt.connect();
     }, 1000);
   });

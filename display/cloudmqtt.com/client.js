@@ -2,6 +2,7 @@
 
 const mqtt = require('mqtt')
 const readline = require('readline')
+require('dotenv').config()
 
 const Bitmaps = {
   Blank:
@@ -50,21 +51,21 @@ const Bitmaps = {
   '◯●●●●◯●●' +
   '◯◯●◯◯●●◯',
   J:
-  '◯◯◯●●◯◯◯' +
-  '◯◯◯●●◯◯◯' +
-  '◯◯◯●●◯◯◯' +
-  '◯◯◯●●◯◯◯' +
-  '◯◯◯●●◯◯◯' +
-  '◯◯◯●●◯◯◯' +
-  '◯●●●●◯◯◯' +
-  '◯●●●◯◯◯◯',
+  '◯◯◯◯●●◯◯' +
+  '◯◯◯◯●●◯◯' +
+  '◯◯◯◯●●◯◯' +
+  '◯◯◯◯●●◯◯' +
+  '◯◯◯◯●●◯◯' +
+  '◯◯◯◯●●◯◯' +
+  '◯◯●●●●◯◯' +
+  '◯◯●●●◯◯◯',
   ot:
   '◯●●◯◯◯◯◯' +
   '●◯◯●◯◯◯◯' +
+  '●◯◯●◯◯◯◯' +
   '◯●●◯◯◯◯◯' +
-  '◯◯◯◯◯◯◯◯' +
   '◯◯◯◯◯●◯◯' +
-  '◯◯◯●●●●●' +
+  '◯◯◯◯●●●●' +
   '◯◯◯◯◯●◯◯' +
   '◯◯◯◯◯◯●●',
   B:
@@ -112,7 +113,10 @@ const icons = [
 
 // MQTT
 console.log('Connecting ...')
-const client = mqtt.connect('mqtt://test.mosquitto.org')
+const client = mqtt.connect(process.env.MQTT_HOST, {
+  username: process.env.MQTT_USERNAME,
+  password: process.env.MQTT_PASSWORD,
+})
 client.on('connect', () => {
   console.log('Connected.')
   console.log('Press 1, 2, or 3 ...')
