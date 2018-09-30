@@ -4,6 +4,9 @@
 > [nRF Connect for Cloud Device API](https://docs.api.nrfcloud.com/), 
 > which is a free service for protyping IoT products and is built on top 
 > of [AWS IoT](https://aws.amazon.com/iot/).
+>
+> The Espruino will connect to the AWS IoT MQTT broker using TLS, and 
+> will be controlled using a REST API.
 
 Go to [nrfcloud.com](https://nrfcloud.com/) and register a new account.
 
