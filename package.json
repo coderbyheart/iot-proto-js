@@ -23,6 +23,8 @@
   "homepage": "https://github.com/coderbyheart/iot-proto-js#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "fetch-ponyfill": "^6.0.2",
+    "lodash.debounce": "^4.0.8",
     "mqtt": "^2.18.0"
   }
 }
