@@ -56,7 +56,6 @@ setTimeout(function() {
 
 // Matrix
 
-
 /**
  * Rotates an 8-bit binary value right one bit.
  *
@@ -83,36 +82,27 @@ const drawIcon = function (display, bitmap) {
   I2C1.writeTo(display, 0, new Uint8Array(doubled.map(rotate)));
 };
 
-const noise = function (display) {
-  "compiled";
-  const b = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  for(let i = 0; i < 8; i++) {
-    for(let j = 0; j < 8; j++) {
-      if (Math.random() > 0.5) {
-        b[i] = b[i] | 1 << j;
-      }
-    }
-  }
-  drawIcon(display, b);
-};
-
 I2C1.setup({scl: B8, sda: B9});
 
 const MATRIX_1 = 0x70;
 const MATRIX_2 = 0x71;
 const MATRIX_3 = 0x72;
 
+const wifiIcon = [24,102,129,24,36,0,24,24];
+const cloudIcon = [0,28,98,129,129,126,0,0];
+
 [MATRIX_1, MATRIX_2, MATRIX_3].forEach(function (display) {
   I2C1.writeTo(display, 0x21); // turn on oscillator
   I2C1.writeTo(display, 0x81); // disp on
   I2C1.writeTo(display, 0xE0 | 0); // 0-15
-  drawIcon(display, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  drawIcon(display, [255, 255, 255, 255, 255, 255, 255, 255]);
 });
 
 function onConnected(err) {
   if (err) throw err;
   wifi.getIP(function(e,ip) {
     console.log(ip);
+    drawIcon(MATRIX_1, wifiIcon);
     tlsOptions.key = okey;
     tlsOptions.cert = ocert;
     tlsOptions.ca = oca;
@@ -123,6 +113,8 @@ function onConnected(err) {
         console.log('tls connected');
 
         const baseShadowTopic = '$aws/things/' + thingId + '/shadow';
+        const updateTopic = baseShadowTopic + '/update/delta';
+        const getTopic = baseShadowTopic + '/get/accepted';
         const mqttHost = tlsOptions.host;
         const mqttOptions = {
           client_id: thingId,
@@ -133,22 +125,31 @@ function onConnected(err) {
         mqtt = require('MQTT').create(mqttHost, mqttOptions);
         mqtt.on('connected', function () {
           console.log('mqtt connected');
+          drawIcon(MATRIX_2, cloudIcon);
           LED2.set();
-          mqtt.subscribe(baseShadowTopic + '/update/delta');
-          [MATRIX_1, MATRIX_2, MATRIX_3].forEach(function (display) {
-            noise(display);
-          });
+          mqtt.subscribe(updateTopic);
+          mqtt.subscribe(getTopic);
+          setTimeout(function () {
+            mqtt.publish(baseShadowTopic + '/get', '');
+          }, 100);
         });
         mqtt.on('publish', function (pub) {
           console.log('\nNew message received: ');
           console.log('topic: ' + pub.topic);
           console.log('message: ' + pub.message);
-          const m = JSON.parse(pub.message);
-          if (m.state) {
+          if (pub.topic === updateTopic){
+            const m = JSON.parse(pub.message);
             if (m.state.icon1) drawIcon(MATRIX_1, m.state.icon1);
             if (m.state.icon2) drawIcon(MATRIX_2, m.state.icon2);
             if (m.state.icon3) drawIcon(MATRIX_3, m.state.icon3);
             mqtt.publish(baseShadowTopic + '/update', JSON.stringify({state: {reported: m.state}}));
+          } else if (pub.topic === getTopic) {
+            const m = JSON.parse(pub.message);
+            if (m.state && m.state.desired) {
+              if (m.state.desired.icon1) drawIcon(MATRIX_1, m.state.desired.icon1);
+              if (m.state.desired.icon2) drawIcon(MATRIX_2, m.state.desired.icon2);
+              if (m.state.desired.icon3) drawIcon(MATRIX_3, m.state.desired.icon3);
+            }
           }
         });
         mqtt.on('disconnected', function () {
@@ -160,7 +161,6 @@ function onConnected(err) {
       });
   });
 }
-
 
 // For Espruino WiFi
 function onInit() {
