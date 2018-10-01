@@ -49,22 +49,33 @@ The response looks like this:
 Register a new device. This will be used to represent the Espruino:
 
 ```bash
-http POST --follow https://api.nrfcloud.com/v1/devices \
+http POST https://api.nrfcloud.com/v1/devices \
   Authorization:"Bearer YOUR_API_KEY"
+```
+
+Now fetch your list of devices and look for the `Generic` device
+that has just been created:
+
+```bash
+http https://api.nrfcloud.com/v1/devices \
+  Authorization:"Bearer YOUR_API_KEY"
 ```
 
 You will receive the device information in response.
 
 ```json
 {
-    "$meta": {
-        "createdAt": "2018-09-30T14:35:26.697Z",
-        "version": "1.0"
-    },
-    "id": "14c6fcb2-9480-437a-aae2-a9c2784b05aa",
-    "name": "14c6fcb2-9480-437a-aae2-a9c2784b05aa",
-    "tags": [],
-    "type": "Generic"
+    "items": [{
+      "$meta": {
+          "createdAt": "2018-09-30T14:35:26.697Z",
+          "version": "1.0"
+      },
+      "id": "14c6fcb2-9480-437a-aae2-a9c2784b05aa",
+      "name": "14c6fcb2-9480-437a-aae2-a9c2784b05aa",
+      "tags": [],
+      "type": "Generic"
+    }],
+    "total": 1
 }
 ```
 
