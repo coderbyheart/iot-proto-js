@@ -96,7 +96,7 @@ const icons = [
 ]
 
 const updateDisplay = debounce(async idx => {
-  const w = await fetch(`${endpoint}/device/${deviceId}/state`, {
+  const w = await fetch(`${endpoint}/devices/${deviceId}/state`, {
     method: 'PATCH',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
