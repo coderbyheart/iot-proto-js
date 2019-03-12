@@ -1,13 +1,18 @@
-# Store dust sensor data on nRF Connect for Cloud Example
+# Store dust sensor data on nRF Connect for Cloud
 
 > In this example we are using the 
 > [nRF Connect for Cloud Device API](https://docs.api.nrfcloud.com/), 
 > which is a free service for protyping IoT products and is built on top 
-> of [AWS IoT](https://aws.amazon.com/iot/), to store dust sensor readings
-> from an [Espruino Wifi](https://www.espruino.com/WiFi) (firmware version 2v01).
+> of [AWS IoT](https://aws.amazon.com/iot/), to store dust sensor readings.
 >
+> The API is device-agnostic and can store data from any kind of device.
+>
+> In this example we use an [Espruino Wifi](https://www.espruino.com/WiFi)
+> (firmware version 2v01).
 > The Espruino will connect to the AWS IoT MQTT broker using TLS, and 
 > regularly publish temperatore and dust sensor readings.
+
+## Prepare your account
 
 Go to [nrfcloud.com](https://nrfcloud.com/) and register a new account.
 
@@ -157,3 +162,63 @@ prod/4583e834-2804-42c7-a940-8c79f2ce9cba/m/14c6fcb2-9480-437a-aae2-a9c2784b05aa
 ```
 
 If everything worked the green LED will be on and after 60 seconds the Espruino will publish the first reading on MQTT.
+
+## Fetch historical messages
+
+Using the API you can now [request the messages](http://petstore.swagger.io/?url=https://docs.api.nrfcloud.com/rest-api.yaml#/Messages/getMessages) your device has sent:
+
+
+```bash
+http https://api.nrfcloud.com/v1/messages \
+  Authorization:"Bearer YOUR_API_KEY" \
+  inclusiveStart==2018-01-01T00:00:00.000Z \
+  exclusiveEnd==2099-01-01T00:00:00.000Z \
+  topics==prod/4583e834-2804-42c7-a940-8c79f2ce9cba/m/14c6fcb2-9480-437a-aae2-a9c2784b05aa
+```
+
+Remember to replace the value for `topics` in this example with your device topic: `topics==${messagesPrefix}/${thingId}`.
+
+```json
+{
+  "items": [
+    {
+      "topic": "prod/4583e834-2804-42c7-a940-8c79f2ce9cba/m/14c6fcb2-9480-437a-aae2-a9c2784b05aa",
+      "deviceId": "14c6fcb2-9480-437a-aae2-a9c2784b05aa",
+      "receivedAt": "2019-03-12T14:48:50.500Z",
+      "message": {
+        "temp": {
+          "temp": 22.9,
+          "rh": 18.7
+        },
+        "dust": {
+          "pm2_5": 0.2,
+          "pm10": 0.5
+        }
+      },
+      "tenantId": "4583e834-2804-42c7-a940-8c79f2ce9cba"
+    },
+    {
+      "topic": "prod/4583e834-2804-42c7-a940-8c79f2ce9cba/m/14c6fcb2-9480-437a-aae2-a9c2784b05aa",
+      "deviceId": "14c6fcb2-9480-437a-aae2-a9c2784b05aa",
+      "receivedAt": "2019-03-12T14:47:50.302Z",
+      "message": {
+        "temp": {
+          "temp": 22.9,
+          "rh": 19.1
+        },
+        "dust": {
+          "pm2_5": 0.2,
+          "pm10": 0.2
+        }
+      },
+      "tenantId": "4583e834-2804-42c7-a940-8c79f2ce9cba"
+    }
+  ],
+  "total": 107,
+  "nextStartKey": "Dnf..."
+}
+```
+
+That's it! You can now leave your device running and can build for example a web app, which shows displays this data.
+
+_Happy connecting!_
